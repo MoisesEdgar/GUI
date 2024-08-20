@@ -4,7 +4,8 @@
  */
 package com.mycompany.supermercado;
 
-import javax.swing.JLabel;
+
+import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -17,6 +18,10 @@ public class ArticulosService {
 
     public void registrar(DefaultTableModel tablaArticulos, String nombre, Integer cantidad, Double precio){
           
+        if(nombre.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Agregar el nombre del articulo");
+            return;
+        }
         if(cantidad < 0){
             JOptionPane.showMessageDialog(null, "La cantidad de articulos debe ser mayor a 0");
             //txtCantidad.setText("");
@@ -30,8 +35,8 @@ public class ArticulosService {
            // txtPrecio.requestFocus();
             return;
         }
-        
-        double total = cantidad * precio;
+  
+        double total = Math.round((cantidad * precio)*100)/100d;
         
        tablaArticulos.addRow(new Object[]{nombre, cantidad, precio,total});
     }
@@ -43,28 +48,29 @@ public class ArticulosService {
         double total = cantidad * precio;
         tablaArticulos.setValueAt(total,jTable1.getSelectedRow(), 3);
     }
-    
+   
     public double calcularTotal(JTable jTable1){
            double totalGeneral = 0, 
                   t1 = 0;
 
             for (int i = 0; i < jTable1.getRowCount(); i++) {
                t1 = Double.parseDouble(jTable1.getValueAt(i, 3).toString());
-               totalGeneral += t1;
+               
+               totalGeneral += Math.round(t1*100)/100d;
             }
            return(totalGeneral);
     }
     
-     public int calcularTotalArticulos(JTable jTable1){
-           int totalArticulos = 0,
+     public int calcularTotalProductos(JTable jTable1){
+           int totalProductos = 0,
                    t2 = 0;
            
             for (int i = 0; i < jTable1.getRowCount(); i++) {
               
                t2 = Integer.parseInt(jTable1.getValueAt(i, 1).toString());
-               totalArticulos +=  t2;
+               totalProductos +=  t2;
             }                                               
           
-           return(totalArticulos);
+           return(totalProductos);
     }  
 }

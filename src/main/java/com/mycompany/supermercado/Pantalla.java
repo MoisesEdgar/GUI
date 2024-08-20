@@ -4,6 +4,7 @@
  */
 package com.mycompany.supermercado;
 
+import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,6 +19,7 @@ public class Pantalla extends javax.swing.JFrame {
 DefaultTableModel tablaArticulos = new DefaultTableModel();
 DefaultTableCellRenderer  orientar = new DefaultTableCellRenderer(); 
 ArticulosService articulosService = new ArticulosService();
+DecimalFormat df = new DecimalFormat("#.00");
 
   String nombre = "";
   int cantidad = 0;
@@ -60,7 +62,7 @@ ArticulosService articulosService = new ArticulosService();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
-        lblTotalArticulos = new javax.swing.JLabel();
+        lblTotalProductos = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnRegistrar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
@@ -149,6 +151,7 @@ ArticulosService articulosService = new ArticulosService();
             }
         ));
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTable1.setGridColor(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(jTable1);
 
         btnSalir.setText("Salir");
@@ -161,13 +164,13 @@ ArticulosService articulosService = new ArticulosService();
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel5.setText("Total de Articulos:");
+        jLabel5.setText("Total de Productos:");
 
         jLabel4.setText("Total General:");
 
-        lblTotal.setText("0");
+        lblTotal.setText("0.0");
 
-        lblTotalArticulos.setText("0");
+        lblTotalProductos.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -185,7 +188,7 @@ ArticulosService articulosService = new ArticulosService();
                         .addContainerGap(53, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblTotalArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotalProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -198,7 +201,7 @@ ArticulosService articulosService = new ArticulosService();
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(lblTotalArticulos)))
+                    .addComponent(lblTotalProductos)))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -254,26 +257,27 @@ ArticulosService articulosService = new ArticulosService();
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(182, 182, 182)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jScrollPane1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(195, 195, 195)
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(195, 195, 195)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -287,12 +291,12 @@ ArticulosService articulosService = new ArticulosService();
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel6)
                         .addGap(69, 69, 69)
-                        .addComponent(jLabel7))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel7)))
                 .addGap(18, 18, 18)
                 .addComponent(btnSalir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -313,7 +317,7 @@ ArticulosService articulosService = new ArticulosService();
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -323,7 +327,7 @@ ArticulosService articulosService = new ArticulosService();
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         obtenerValores();
         articulosService.registrar(tablaArticulos,nombre, cantidad, precio);
-        lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+        lblTotalProductos.setText(Integer.toString( articulosService.calcularTotalProductos(jTable1)));
         lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
         limpiar();
     }//GEN-LAST:event_btnRegistrarActionPerformed
@@ -335,15 +339,15 @@ ArticulosService articulosService = new ArticulosService();
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         obtenerValores();
         articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio);
-        lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+        lblTotalProductos.setText(Integer.toString( articulosService.calcularTotalProductos(jTable1)));
         lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
         limpiar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         tablaArticulos.removeRow(jTable1.getSelectedRow()); 
-        lblTotalArticulos.setText(Integer.toString(articulosService.calcularTotalArticulos(jTable1)));
-        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+        lblTotalProductos.setText(Integer.toString(articulosService.calcularTotalProductos(jTable1)));
+        lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
         limpiar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -398,7 +402,7 @@ ArticulosService articulosService = new ArticulosService();
     private java.awt.Label label1;
     private java.awt.Label label2;
     private javax.swing.JLabel lblTotal;
-    private javax.swing.JLabel lblTotalArticulos;
+    private javax.swing.JLabel lblTotalProductos;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
