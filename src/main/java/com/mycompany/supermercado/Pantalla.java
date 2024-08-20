@@ -5,20 +5,35 @@
 package com.mycompany.supermercado;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import sun.swing.table.DefaultTableCellHeaderRenderer;
 
 /**
  *
  * @author PRACTICA MACRONNECT
  */
 public class Pantalla extends javax.swing.JFrame {
- DefaultTableModel mt = new DefaultTableModel();
+DefaultTableModel tablaArticulos = new DefaultTableModel();
+DefaultTableCellRenderer  orientar = new DefaultTableCellRenderer(); 
+ArticulosService articulosService = new ArticulosService();
 
+  String nombre = "";
+  int cantidad = 0;
+  double precio = 0;
+        
     public Pantalla() {
         initComponents();
          String ids [] = {"Nombre del Articulo","Cantidad","Precio","Total"};
-                     mt.setColumnIdentifiers(ids);
-                     jTable1.setModel(mt);
+                     tablaArticulos.setColumnIdentifiers(ids);
+                     jTable1.setModel(tablaArticulos);
+
+                     orientar.setHorizontalAlignment(SwingConstants.RIGHT);
+                     jTable1.getColumnModel().getColumn(1).setCellRenderer(orientar);
+                     jTable1.getColumnModel().getColumn(2).setCellRenderer(orientar); 
+                     jTable1.getColumnModel().getColumn(3).setCellRenderer(orientar); 
+    
     }
     
     @SuppressWarnings("unchecked")
@@ -50,7 +65,6 @@ public class Pantalla extends javax.swing.JFrame {
         btnRegistrar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -235,8 +249,6 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -246,9 +258,7 @@ public class Pantalla extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(182, 182, 182)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
@@ -282,8 +292,7 @@ public class Pantalla extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addGap(69, 69, 69)
                         .addComponent(jLabel7))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnSalir)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -293,9 +302,7 @@ public class Pantalla extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,13 +321,11 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        String nombre = txtNombre.getText();
-        int cantidad = Integer.parseInt(txtCantidad.getText());
-        double precio = Double.parseDouble(txtPrecio.getText());
-        double total = cantidad * precio;
-        
-        registrar(nombre, cantidad, precio,total);
-        calcularTotales();
+        obtenerValores();
+        articulosService.registrar(tablaArticulos,nombre, cantidad, precio);
+        lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+        limpiar();
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
@@ -328,18 +333,18 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCantidadActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        String nombre = txtNombre.getText();
-        int cantidad = Integer.parseInt(txtCantidad.getText());
-        double precio = Double.parseDouble(txtPrecio.getText());
-        double total = cantidad * precio;
-        
-        modificar(nombre, cantidad, precio, total);
-        calcularTotales();
+        obtenerValores();
+        articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio);
+        lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+        limpiar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        mt.removeRow(jTable1.getSelectedRow()); 
-        calcularTotales();
+        tablaArticulos.removeRow(jTable1.getSelectedRow()); 
+        lblTotalArticulos.setText(Integer.toString(articulosService.calcularTotalArticulos(jTable1)));
+        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+        limpiar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
@@ -355,58 +360,18 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
     }
-
     
-    public void limpiar(){
+    public void obtenerValores(){
+      nombre = txtNombre.getText();
+      cantidad = Integer.parseInt(txtCantidad.getText());
+      precio = Double.parseDouble(txtPrecio.getText());     
+    }
+    
+     public void limpiar(){
         txtNombre.setText("");
         txtCantidad.setText("");
         txtPrecio.setText("");
         txtNombre.requestFocus();
-    }
-    
-    public void registrar(String nombre, Integer cantidad, Double precio, Double total){
-        
-            
-        if(cantidad < 0){
-            JOptionPane.showMessageDialog(null, "La cantidad de articulos debe ser mayor a 0");
-            txtCantidad.setText("");
-            txtCantidad.requestFocus();
-            return;
-        }
-        
-        if(precio < 0.1){
-            JOptionPane.showMessageDialog(null, "El precio del producto no puede ser menor a 0.1");
-            txtPrecio.setText("");
-            txtPrecio.requestFocus();
-            return;
-        }
-        
-        mt.addRow(new Object[]{nombre, cantidad, precio,total});
-        limpiar();
-    }
-    
-    public void modificar(String nombre, Integer cantidad, Double precio, Double total){
-        mt.setValueAt(nombre,jTable1.getSelectedRow(), 0);
-        mt.setValueAt(cantidad,jTable1.getSelectedRow(), 1);
-        mt.setValueAt(precio,jTable1.getSelectedRow(), 2);
-        mt.setValueAt(total,jTable1.getSelectedRow(), 3);
-    }
-    
-    public void calcularTotales(){
-           double totalGeneral = 0, 
-                  t1 = 0;
-           int totalArticulos = 0,
-                   t2 = 0;
-           
-            for (int i = 0; i < jTable1.getRowCount(); i++) {
-               t1 = Double.parseDouble(jTable1.getValueAt(i, 3).toString());
-               totalGeneral += t1;
-               t2 = Integer.parseInt(jTable1.getValueAt(i, 1).toString());
-               totalArticulos +=  t2;
-            }
-          
-           lblTotalArticulos.setText(Integer.toString(totalArticulos));
-           lblTotal.setText(Double.toString(totalGeneral));
     }
 
     
@@ -417,7 +382,6 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
