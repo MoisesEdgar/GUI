@@ -16,52 +16,48 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ArticulosService {
 
-    public void registrar(DefaultTableModel tablaArticulos, String nombre, Integer cantidad, Double precio){
+    public boolean registrar(DefaultTableModel tablaArticulos, String nombre, String cantidad, String precio){
+        
+        if(validar(nombre, cantidad, precio)){
+          double total = Math.round((Integer.parseInt(cantidad) * Double.parseDouble(precio))*100)/100d;
+          tablaArticulos.addRow(new Object[]{nombre, Integer.parseInt(cantidad), Double.parseDouble(precio), total});
           
-        if(nombre.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Agregar el nombre del articulo");
-            return;
-        }
-        if(cantidad < 0){
-            JOptionPane.showMessageDialog(null, "La cantidad de articulos debe ser mayor a 0");
-            //txtCantidad.setText("");
-            //txtCantidad.requestFocus();
-            return;
-        }
+          return true;
+        }else{
+          return false;
+        } 
         
-        if(precio < 0.1){
-            JOptionPane.showMessageDialog(null, "El precio del producto no puede ser menor a 0.1");
-            //txtPrecio.setText("");
-           // txtPrecio.requestFocus();
-            return;
-        }
-  
-        double total = Math.round((cantidad * precio)*100)/100d;
-        
-       tablaArticulos.addRow(new Object[]{nombre, cantidad, precio,total});
     }
     
-    public void modificar(DefaultTableModel tablaArticulos, JTable jTable1, String nombre, Integer cantidad, Double precio){
-        tablaArticulos.setValueAt(nombre,jTable1.getSelectedRow(), 0);
-        tablaArticulos.setValueAt(cantidad,jTable1.getSelectedRow(), 1);
-        tablaArticulos.setValueAt(precio,jTable1.getSelectedRow(), 2);
-        double total = cantidad * precio;
-        tablaArticulos.setValueAt(total,jTable1.getSelectedRow(), 3);
+    public boolean modificar(DefaultTableModel tablaArticulos, JTable jTable1, String nombre, String cantidad, String precio){
+        
+        if(validar(nombre, cantidad, precio)){
+            tablaArticulos.setValueAt(nombre,jTable1.getSelectedRow(), 0);
+            tablaArticulos.setValueAt(Integer.parseInt(cantidad),jTable1.getSelectedRow(), 1);
+            tablaArticulos.setValueAt(Double.parseDouble(precio),jTable1.getSelectedRow(), 2);
+            double total = Integer.parseInt(cantidad) * Double.parseDouble(precio);
+            tablaArticulos.setValueAt(total,jTable1.getSelectedRow(), 3);
+            
+            return true;
+        }else{
+            return false;
+        } 
     }
    
     public double calcularTotal(JTable jTable1){
            double totalGeneral = 0, 
                   t1 = 0;
-
+           
             for (int i = 0; i < jTable1.getRowCount(); i++) {
                t1 = Double.parseDouble(jTable1.getValueAt(i, 3).toString());
                
                totalGeneral += Math.round(t1*100)/100d;
             }
+            
            return(totalGeneral);
     }
     
-     public int calcularTotalProductos(JTable jTable1){
+     public int calcularTotalArticulos(JTable jTable1){
            int totalProductos = 0,
                    t2 = 0;
            
@@ -73,4 +69,44 @@ public class ArticulosService {
           
            return(totalProductos);
     }  
+     
+     public boolean validar (String nombre, String cantidad, String precio){
+         
+        if(nombre.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Favor de agregar el nombre del articulo");
+            return false;
+        }
+        
+        if(cantidad.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Favor de agregar una cantidad");
+            //txtCantidad.requestFocus();
+           
+            return false;
+        }
+        
+        if(precio.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Favor de agregar un precio");
+           // txtPrecio.requestFocus();
+           
+            return false;
+        }
+        
+        if(Integer.parseInt(cantidad) < 0){
+            JOptionPane.showMessageDialog(null, "La cantidad de articulos debe ser mayor a 0");
+            //txtCantidad.setText("");
+            //txtCantidad.requestFocus();
+           
+            return false;
+        }
+        
+        if(Double.parseDouble(precio) < 0.1){
+            JOptionPane.showMessageDialog(null, "El precio del producto debe ser mayor a 0.1");
+            //txtPrecio.setText("");
+           // txtPrecio.requestFocus();
+           
+            return false;
+        }
+        
+         return true;
+     }
 }

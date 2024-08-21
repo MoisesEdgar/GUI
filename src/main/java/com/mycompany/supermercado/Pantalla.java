@@ -19,18 +19,17 @@ public class Pantalla extends javax.swing.JFrame {
 DefaultTableModel tablaArticulos = new DefaultTableModel();
 DefaultTableCellRenderer  orientar = new DefaultTableCellRenderer(); 
 ArticulosService articulosService = new ArticulosService();
-DecimalFormat df = new DecimalFormat("#.00");
 
   String nombre = "";
-  int cantidad = 0;
-  double precio = 0;
+  String cantidad = "";
+  String precio = "";
         
     public Pantalla() {
         initComponents();
-         String ids [] = {"Nombre del Articulo","Cantidad","Precio","Total"};
+         String ids [] = {"Nombre del articulo","Cantidad","Precio unitario","Total"};
                      tablaArticulos.setColumnIdentifiers(ids);
                      jTable1.setModel(tablaArticulos);
-
+                     
                      orientar.setHorizontalAlignment(SwingConstants.RIGHT);
                      jTable1.getColumnModel().getColumn(1).setCellRenderer(orientar);
                      jTable1.getColumnModel().getColumn(2).setCellRenderer(orientar); 
@@ -62,7 +61,7 @@ DecimalFormat df = new DecimalFormat("#.00");
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
-        lblTotalProductos = new javax.swing.JLabel();
+        lblTotalArticulos = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnRegistrar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
@@ -82,7 +81,7 @@ DecimalFormat df = new DecimalFormat("#.00");
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel1.setText("Nombre del Articulo:");
+        jLabel1.setText("Nombre del articulo:");
 
         txtNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
@@ -164,13 +163,13 @@ DecimalFormat df = new DecimalFormat("#.00");
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel5.setText("Total de Productos:");
+        jLabel5.setText("Total de articulos:");
 
-        jLabel4.setText("Total General:");
+        jLabel4.setText("Total general:");
 
         lblTotal.setText("0.0");
 
-        lblTotalProductos.setText("0");
+        lblTotalArticulos.setText("0");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -185,11 +184,11 @@ DecimalFormat df = new DecimalFormat("#.00");
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(lblTotal)
-                        .addContainerGap(53, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblTotalProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(lblTotalArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(33, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +200,7 @@ DecimalFormat df = new DecimalFormat("#.00");
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(lblTotalProductos)))
+                    .addComponent(lblTotalArticulos)))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -326,10 +325,11 @@ DecimalFormat df = new DecimalFormat("#.00");
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         obtenerValores();
-        articulosService.registrar(tablaArticulos,nombre, cantidad, precio);
-        lblTotalProductos.setText(Integer.toString( articulosService.calcularTotalProductos(jTable1)));
-        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
-        limpiar();
+        if(articulosService.registrar(tablaArticulos,nombre, cantidad, precio)){
+            lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+            lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+            limpiar(); 
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
@@ -338,16 +338,17 @@ DecimalFormat df = new DecimalFormat("#.00");
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         obtenerValores();
-        articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio);
-        lblTotalProductos.setText(Integer.toString( articulosService.calcularTotalProductos(jTable1)));
-        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
-        limpiar();
+        if(articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio)){
+            lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+            lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+            limpiar();
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         tablaArticulos.removeRow(jTable1.getSelectedRow()); 
-        lblTotalProductos.setText(Integer.toString(articulosService.calcularTotalProductos(jTable1)));
-        lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
+        lblTotalArticulos.setText(Integer.toString(articulosService.calcularTotalArticulos(jTable1)));
+        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
         limpiar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -367,8 +368,8 @@ DecimalFormat df = new DecimalFormat("#.00");
     
     public void obtenerValores(){
       nombre = txtNombre.getText();
-      cantidad = Integer.parseInt(txtCantidad.getText());
-      precio = Double.parseDouble(txtPrecio.getText());     
+      cantidad = txtCantidad.getText();
+      precio = txtPrecio.getText();     
     }
     
      public void limpiar(){
@@ -402,7 +403,7 @@ DecimalFormat df = new DecimalFormat("#.00");
     private java.awt.Label label1;
     private java.awt.Label label2;
     private javax.swing.JLabel lblTotal;
-    private javax.swing.JLabel lblTotalProductos;
+    private javax.swing.JLabel lblTotalArticulos;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecio;
