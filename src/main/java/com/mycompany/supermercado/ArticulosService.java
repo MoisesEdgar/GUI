@@ -29,21 +29,33 @@ public class ArticulosService {
         
     }
     
+    public void guardarDatos(DefaultTableModel tablaArticulos, JTable jTable1, String nombre, String cantidad, String precio){
+         tablaArticulos.setValueAt(nombre,jTable1.getSelectedRow(), 0);
+         tablaArticulos.setValueAt(Integer.parseInt(cantidad),jTable1.getSelectedRow(), 1);
+         tablaArticulos.setValueAt(Double.parseDouble(precio),jTable1.getSelectedRow(), 2);
+         double total = Integer.parseInt(cantidad) * Double.parseDouble(precio);
+         tablaArticulos.setValueAt(total,jTable1.getSelectedRow(), 3);
+    }
+    
     public boolean modificar(DefaultTableModel tablaArticulos, JTable jTable1, String nombre, String cantidad, String precio){
-        
-        if(validar(nombre, cantidad, precio)){
-            tablaArticulos.setValueAt(nombre,jTable1.getSelectedRow(), 0);
-            tablaArticulos.setValueAt(Integer.parseInt(cantidad),jTable1.getSelectedRow(), 1);
-            tablaArticulos.setValueAt(Double.parseDouble(precio),jTable1.getSelectedRow(), 2);
-            double total = Integer.parseInt(cantidad) * Double.parseDouble(precio);
-            tablaArticulos.setValueAt(total,jTable1.getSelectedRow(), 3);
-            
-            return true;
+        if(validar(nombre, cantidad, precio)){   
+            String campo = (String)jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+                if(nombre.equalsIgnoreCase(campo)) {
+                    guardarDatos(tablaArticulos, jTable1,  nombre, cantidad,  precio);
+                    return true;
+                }else{
+                    if(validarArticulo(jTable1, nombre)){
+                        guardarDatos(tablaArticulos, jTable1,  nombre, cantidad,  precio);
+                        return true;
+                    }
+                }
         }else{
             return false;
-        } 
+        }
+        return true;
     }
    
+    
     public double calcularTotal(JTable jTable1){
            double totalGeneral = 0, 
                   t1 = 0;
@@ -136,7 +148,7 @@ public class ArticulosService {
      }
      
      
-     public boolean val( JTable jTable1, String nombre){
+     public boolean validarArticulo( JTable jTable1, String nombre){
          String nombre2="";
             for (int i = 0; i < jTable1.getRowCount(); i++) {
                 nombre2 = (String)jTable1.getValueAt(i, 0);
