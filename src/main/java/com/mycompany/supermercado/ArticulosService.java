@@ -81,7 +81,7 @@ public class ArticulosService {
      }
      
      public boolean validar (String nombre, String cantidad, String precio){
-         
+
         if(nombre.isEmpty()){
             JOptionPane.showMessageDialog(null, "Favor de agregar el nombre del articulo");
             return false;
@@ -133,5 +133,18 @@ public class ArticulosService {
         }
   
          return true;
+     }
+     
+     
+     public boolean val( JTable jTable1, String nombre){
+         String nombre2="";
+            for (int i = 0; i < jTable1.getRowCount(); i++) {
+                nombre2 = (String)jTable1.getValueAt(i, 0);
+               if(nombre.equalsIgnoreCase(nombre2)){
+                    JOptionPane.showMessageDialog(null, "El producto ya esta registrado");
+                    return false;
+               }
+            }
+            return true;
      }
 }

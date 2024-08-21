@@ -325,11 +325,14 @@ ArticulosService articulosService = new ArticulosService();
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         obtenerValores();
-        if(articulosService.registrar(tablaArticulos,nombre, cantidad, precio)){
-            lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
-            lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
-            limpiar(); 
+        if(articulosService.val(jTable1, nombre)){
+            if(articulosService.registrar(tablaArticulos,nombre, cantidad, precio)){
+                lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+                lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
+                limpiar(); 
+            }
         }
+            
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
@@ -338,11 +341,13 @@ ArticulosService articulosService = new ArticulosService();
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         obtenerValores();
-        if(articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio)){
-            lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
-            lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
-            limpiar();
-        }
+          if(articulosService.val(jTable1, nombre)){
+            if(articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio)){
+                lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
+                lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
+                limpiar();
+            }
+          }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
