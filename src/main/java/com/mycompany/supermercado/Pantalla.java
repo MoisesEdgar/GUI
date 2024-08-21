@@ -327,7 +327,7 @@ ArticulosService articulosService = new ArticulosService();
         obtenerValores();
         if(articulosService.registrar(tablaArticulos,nombre, cantidad, precio)){
             lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
-            lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+            lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
             limpiar(); 
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
@@ -340,7 +340,7 @@ ArticulosService articulosService = new ArticulosService();
         obtenerValores();
         if(articulosService.modificar(tablaArticulos, jTable1, nombre, cantidad, precio)){
             lblTotalArticulos.setText(Integer.toString( articulosService.calcularTotalArticulos(jTable1)));
-            lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+            lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
             limpiar();
         }
     }//GEN-LAST:event_btnModificarActionPerformed
@@ -348,7 +348,7 @@ ArticulosService articulosService = new ArticulosService();
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         tablaArticulos.removeRow(jTable1.getSelectedRow()); 
         lblTotalArticulos.setText(Integer.toString(articulosService.calcularTotalArticulos(jTable1)));
-        lblTotal.setText(Double.toString(articulosService.calcularTotal(jTable1)));
+        lblTotal.setText(Double.toString(Math.round(articulosService.calcularTotal(jTable1)*100)/100d));
         limpiar();
     }//GEN-LAST:event_btnEliminarActionPerformed
 

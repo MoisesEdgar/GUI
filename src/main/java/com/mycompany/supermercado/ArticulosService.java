@@ -69,6 +69,16 @@ public class ArticulosService {
           
            return(totalProductos);
     }  
+
+     public boolean validarCampos(String cadena, Integer opcion){
+         if(opcion == 0){
+              return cadena.matches("^([a-zA-Z]+)(\\s[a-zA-Z]+)*$");
+         }else if(opcion == 1){
+             return cadena.matches("^-?[0-9]+$");
+         }else{
+              return cadena.matches("^\\d+(\\.\\d+)?$");
+         }
+     }
      
      public boolean validar (String nombre, String cantidad, String precio){
          
@@ -91,7 +101,22 @@ public class ArticulosService {
             return false;
         }
         
-        if(Integer.parseInt(cantidad) < 0){
+        if(validarCampos(nombre,0) == false){
+            JOptionPane.showMessageDialog(null, "Solo se aceptan letras en el campo nombre");
+            return false;
+        }
+          
+        if(validarCampos(cantidad,1) == false){
+            JOptionPane.showMessageDialog(null, "Solo se aceptan numeros enteros en el campo cantidad");
+            return false;
+        }
+         
+        if(validarCampos(precio,2) == false){
+            JOptionPane.showMessageDialog(null, "Solo se aceptan numeros decimales en el campo precio");
+            return false;
+        }
+         
+        if(Integer.parseInt(cantidad) <= 0){
             JOptionPane.showMessageDialog(null, "La cantidad de articulos debe ser mayor a 0");
             //txtCantidad.setText("");
             //txtCantidad.requestFocus();
@@ -106,7 +131,7 @@ public class ArticulosService {
            
             return false;
         }
-        
+  
          return true;
      }
 }
