@@ -31,6 +31,7 @@ public class Ejemplo extends javax.swing.JFrame {
         tblPrincipal.getColumnModel().getColumn(2).setCellRenderer(new DecimalesRenderer());
         tblPrincipal.getColumnModel().getColumn(3).setCellRenderer(new DecimalesRenderer());
         
+        
         btnAgregar.addActionListener(this::onBotonAgregarClicked);
         btnEliminar.addActionListener(this::onBotonEliminarClicked);
     }
