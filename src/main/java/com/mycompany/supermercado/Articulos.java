@@ -32,10 +32,52 @@ public class Articulos extends javax.swing.JFrame {
 
         btnAgregar.addActionListener(this::onBotonAgregarClicked);
         btnEliminar.addActionListener(this::onBotonEliminarClicked);
-        tablaArticulos.addTableModelListener(this::onModeloProductosAlterado);
- 
+        tablaArticulos.addTableModelListener(this::onModeloArticulosAlterado);
+
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadKeyTyped(evt);
+            }
+        });
+
+        txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecioKeyTyped(evt);
+            }
+        });
+
     }
-    
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+        if ((c < 'a' || c > 'z') && ((c < 'A' || c > 'Z'))) {
+            evt.consume();
+        }
+    }
+
+    private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+        if (c < '0' || c > '9') {
+            evt.consume();
+        }
+    }
+
+    private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {
+        char c = evt.getKeyChar();
+        if ((c < '0' || c > '9') && (c != '.')) {
+            evt.consume();
+        }
+    }
+
     private void onBotonAgregarClicked(ActionEvent evt) {
         String nombre = getNombre();
         Integer cantidad = getCantidad();
@@ -60,28 +102,27 @@ public class Articulos extends javax.swing.JFrame {
         }
     }
 
-    private void onModeloProductosAlterado(TableModelEvent evt) {
-        String nombre = getNombre();
-        Integer cantidad = getCantidad();
-        Double precio = getPrecio();
-
+    private void onModeloArticulosAlterado(TableModelEvent evt) {
+        int rowIndex = evt.getFirstRow();
+        int colIndex = evt.getColumn();
         switch (evt.getType()) {
             case TableModelEvent.UPDATE:
-                int rowIndex = evt.getFirstRow();
-                int colIndex = evt.getColumn();
-                
-             if (colIndex == 1 ) { 
-                 
-                     lblTotalNeto.setText(String.valueOf(tblPrincipal.getValueAt(rowIndex, 1)));
-             }
-  
 
-              
+                Integer cantidadIngresada = (Integer) tblPrincipal.getValueAt(rowIndex, colIndex);
+
+                if (colIndex == 1 && cantidadIngresada <= 0) {
+                    JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.");
+
+                    return;
+                }
+                
+                calcularTotales();
+
             //case TableModelEvent.INSERT: 
             //case TableModelEvent.DELETE: 
         }
     }
-    
+
     private String getNombre() {
         String nombre = txtNombre.getText();
         if (txtNombre.getText().isEmpty()) {
@@ -254,12 +295,6 @@ public class Articulos extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel4.add(jLabel3, gridBagConstraints);
-
-        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtNombreKeyTyped(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
@@ -267,12 +302,6 @@ public class Articulos extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 100);
         jPanel4.add(txtNombre, gridBagConstraints);
-
-        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCantidadKeyTyped(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -280,12 +309,6 @@ public class Articulos extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 100);
         jPanel4.add(txtCantidad, gridBagConstraints);
-
-        txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtPrecioKeyTyped(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
@@ -345,27 +368,6 @@ public class Articulos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyTyped
-        char c = evt.getKeyChar();
-        if (c < '0' || c > '9') {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtCantidadKeyTyped
-
-    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
-        char c = evt.getKeyChar();
-        if ((c < 'a' || c > 'z') && ((c < 'A' || c > 'Z'))) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtNombreKeyTyped
-
-    private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
-        char c = evt.getKeyChar();
-        if ((c < '0' || c > '9') && (c != '.')) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtPrecioKeyTyped
 
     public static void main(String args[]) {
 
