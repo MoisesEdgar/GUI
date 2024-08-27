@@ -105,18 +105,43 @@ public class Articulos extends javax.swing.JFrame {
     private void onModeloArticulosAlterado(TableModelEvent evt) {
         int rowIndex = evt.getFirstRow();
         int colIndex = evt.getColumn();
+
         switch (evt.getType()) {
             case TableModelEvent.UPDATE:
 
-                Integer cantidadIngresada = (Integer) tblPrincipal.getValueAt(rowIndex, colIndex);
-
-                if (colIndex == 1 && cantidadIngresada <= 0) {
-                    JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.");
-
-                    return;
+                if (colIndex == 0) {
+                    String nombre = (String) tblPrincipal.getValueAt(rowIndex, 0);
+                    for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+                        if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
+                            if (i != rowIndex) {
+                                JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
+                                tablaArticulos.setValueAt("Nombre no valido", evt.getFirstRow(), 0);
+                                break;
+                            }
+                        }
+                    }
                 }
-                
-                calcularTotales();
+
+                if (colIndex == 1) {
+                    Integer cantidadIngresada = Integer.parseInt((String) tblPrincipal.getValueAt(rowIndex, 1));
+                    if (cantidadIngresada <= 0) {
+                        JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
+                        tablaArticulos.setValueAt("1", tblPrincipal.getSelectedRow(), 1);
+                        break;
+                    }
+                }
+
+                if (colIndex == 2) {
+                    Double cantidadIngresada = Double.parseDouble((String) tblPrincipal.getValueAt(rowIndex, 2));
+                    if (cantidadIngresada <= 0) {
+                        JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+                        tablaArticulos.setValueAt("1.0", tblPrincipal.getSelectedRow(), 2);
+                        break;
+                    }
+                }
+
+            
+               
 
             //case TableModelEvent.INSERT: 
             //case TableModelEvent.DELETE: 
@@ -192,8 +217,6 @@ public class Articulos extends javax.swing.JFrame {
         for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
             if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
                 JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
-                txtNombre.requestFocus();
-                txtNombre.setText("");
                 return false;
             }
         }

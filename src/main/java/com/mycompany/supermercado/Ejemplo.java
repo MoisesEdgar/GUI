@@ -63,8 +63,8 @@ public class Ejemplo extends javax.swing.JFrame {
 
                     Producto producto = modeloProductos.getProducto(rowIndex);
 
-                    Integer cantidadIngresada = producto.cantidad;
-                    //Integer cantidadIngresada = (Integer) modeloProductos.getValueAt(evt.getFirstRow(), evt.getColumn());
+                   // Integer cantidadIngresada = producto.cantidad;
+                    Integer cantidadIngresada = (Integer) modeloProductos.getValueAt(evt.getFirstRow(), evt.getColumn());
 
                     if (cantidadIngresada <= 0) {
                         JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a cero");
