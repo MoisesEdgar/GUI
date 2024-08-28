@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class Articulos extends javax.swing.JFrame {
 
     private final DefaultTableModel tablaArticulos = new DefaultTableModel();
-    DefaultTableCellRenderer valoresNumericosRender = new DefaultTableCellRenderer();
+    private final DefaultTableCellRenderer valoresNumericosRender = new DefaultTableCellRenderer();
 
     public Articulos() throws ParseException {
         initComponents();
@@ -31,6 +31,8 @@ public class Articulos extends javax.swing.JFrame {
         tblPrincipal.getColumnModel().getColumn(1).setCellRenderer(valoresNumericosRender);
         tblPrincipal.getColumnModel().getColumn(2).setCellRenderer(valoresNumericosRender);
         tblPrincipal.getColumnModel().getColumn(3).setCellRenderer(valoresNumericosRender);
+
+        
         tblPrincipal.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JTextField()) {
             @Override
             public boolean isCellEditable(EventObject e) {
@@ -237,10 +239,10 @@ public class Articulos extends javax.swing.JFrame {
             Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
             Double precio = Double.parseDouble(tblPrincipal.getValueAt(i, 2).toString());
 
-            Double totalProducto = cantidad * precio;
+            Double totalProducto = Math.round((cantidad * precio) * 100)/100d;
             tablaArticulos.setValueAt(String.valueOf(totalProducto), i, 3);
 
-            Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
+            Double total  = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString()) ;
 
             totalCantidad += cantidad;
             totalNeto += Math.round(total * 100) / 100d;
@@ -310,6 +312,7 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         java.awt.GridBagLayout jPanel4Layout = new java.awt.GridBagLayout();
         jPanel4Layout.columnWidths = new int[] {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0};
         jPanel4Layout.rowHeights = new int[] {0, 7, 0, 7, 0, 7, 0, 7, 0};
@@ -376,6 +379,7 @@ public class Articulos extends javax.swing.JFrame {
         getContentPane().add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
         jLabel4.setText("Total articulos:");
