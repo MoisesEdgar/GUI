@@ -1,7 +1,6 @@
 package com.mycompany.supermercado;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +14,6 @@ public class Articulos extends javax.swing.JFrame {
 
     private final DefaultTableModel tablaArticulos = new DefaultTableModel();
     DefaultTableCellRenderer valoresNumericosRender = new DefaultTableCellRenderer();
-    ArticulosService articulosService = new ArticulosService();
-    Integer ir = 0;
 
     public Articulos() throws ParseException {
         initComponents();
@@ -30,6 +27,7 @@ public class Articulos extends javax.swing.JFrame {
         tblPrincipal.getColumnModel().getColumn(2).setCellRenderer(valoresNumericosRender);
         tblPrincipal.getColumnModel().getColumn(3).setCellRenderer(valoresNumericosRender);
 
+        //tblPrincipal.setEnabled(false);
         btnAgregar.addActionListener(this::onBotonAgregarClicked);
         btnEliminar.addActionListener(this::onBotonEliminarClicked);
         tablaArticulos.addTableModelListener(this::onModeloArticulosAlterado);
@@ -124,6 +122,7 @@ public class Articulos extends javax.swing.JFrame {
 
                 if (colIndex == 1) {
                     Integer cantidadIngresada = Integer.parseInt((String) tblPrincipal.getValueAt(rowIndex, 1));
+                    calcularTotalesAlModificar();
                     if (cantidadIngresada <= 0) {
                         JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
                         tablaArticulos.setValueAt("1", tblPrincipal.getSelectedRow(), 1);
@@ -133,15 +132,13 @@ public class Articulos extends javax.swing.JFrame {
 
                 if (colIndex == 2) {
                     Double cantidadIngresada = Double.parseDouble((String) tblPrincipal.getValueAt(rowIndex, 2));
+                    calcularTotalesAlModificar();
                     if (cantidadIngresada <= 0) {
                         JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
                         tablaArticulos.setValueAt("1.0", tblPrincipal.getSelectedRow(), 2);
                         break;
                     }
                 }
-
-            
-               
 
             //case TableModelEvent.INSERT: 
             //case TableModelEvent.DELETE: 
@@ -229,8 +226,33 @@ public class Articulos extends javax.swing.JFrame {
 
         for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
 
-            Integer cantidad = (Integer) tblPrincipal.getValueAt(i, 1);
-            Double total = (Double) tblPrincipal.getValueAt(i, 3);
+            Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
+            //Double precio = Double.parseDouble(tblPrincipal.getValueAt(i, 2).toString());
+
+            //Double totalProducto = cantidad * precio;
+            // tablaArticulos.setValueAt(String.valueOf(totalProducto), i, 3);
+            Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
+
+            totalCantidad += cantidad;
+            totalNeto += Math.round(total * 100) / 100d;
+        }
+
+        lblTotalArticulos.setText(String.valueOf(totalCantidad));
+        lblTotalNeto.setText(String.valueOf(totalNeto));
+    }
+
+    private void calcularTotalesAlModificar() {
+        Integer totalCantidad = 0;
+        Double totalNeto = 0.0;
+
+        for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+            Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
+            Double precio = Double.parseDouble(tblPrincipal.getValueAt(i, 2).toString());
+
+            Double totalProducto = cantidad * precio;
+            tablaArticulos.setValueAt(String.valueOf(totalProducto), i, 3);
+
+            Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
 
             totalCantidad += cantidad;
             totalNeto += Math.round(total * 100) / 100d;
@@ -284,7 +306,15 @@ public class Articulos extends javax.swing.JFrame {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Double.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblPrincipal);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
