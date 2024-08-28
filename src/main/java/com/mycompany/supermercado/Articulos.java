@@ -1,8 +1,10 @@
 package com.mycompany.supermercado;
 
-import com.sun.beans.editors.IntegerEditor;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
+import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
@@ -26,246 +28,236 @@ public class Articulos extends javax.swing.JFrame {
         tblPrincipal.setModel(tablaArticulos);
 
         valoresNumericosRender.setHorizontalAlignment(SwingConstants.RIGHT);
-
         tblPrincipal.getColumnModel().getColumn(1).setCellRenderer(valoresNumericosRender);
         tblPrincipal.getColumnModel().getColumn(2).setCellRenderer(valoresNumericosRender);
         tblPrincipal.getColumnModel().getColumn(3).setCellRenderer(valoresNumericosRender);
-
         tblPrincipal.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(new JTextField()) {
             @Override
-            public boolean isCellEditable(java.util.EventObject e) {
+            public boolean isCellEditable(EventObject e) {
                 return false;
             }
         });
 
-            btnAgregar.addActionListener(this::onBotonAgregarClicked);
-            btnEliminar.addActionListener(this::onBotonEliminarClicked);
-            tablaArticulos.addTableModelListener(this::onModeloArticulosAlterado);
+        btnAgregar.addActionListener(this::onBotonAgregarClicked);
+        btnEliminar.addActionListener(this::onBotonEliminarClicked);
+        tablaArticulos.addTableModelListener(this::onArticuloAlterado);
 
-            txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
-                @Override
-                public void keyTyped(java.awt.event.KeyEvent evt
-                ) {
-                    char c = evt.getKeyChar();
-                    if ((c < 'a' || c > 'z') && ((c < 'A' || c > 'Z'))) {
-                        evt.consume();
-                    }
-                }
-            });
-
-            txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
-                @Override
-                public void keyTyped(java.awt.event.KeyEvent evt
-                ) {
-                    char c = evt.getKeyChar();
-                    if (c < '0' || c > '9') {
-                        evt.consume();
-                    }
-                }
-            });
-
-            txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
-                @Override
-                public void keyTyped(java.awt.event.KeyEvent evt
-                ) {
-                    char c = evt.getKeyChar();
-                    if ((c < '0' || c > '9') && (c != '.')) {
-                        evt.consume();
-                    }
-                }
-            });
-        }
-
-        private void onBotonAgregarClicked(ActionEvent evt) {
-            String nombre = getNombre();
-            Integer cantidad = getCantidad();
-            Double precio = getPrecio();
-
-            if (validarVariables(nombre, cantidad, precio)) {
-                if (validarArticulosRepetidos(nombre)) {
-                    tablaArticulos.addRow(new Object[]{nombre, cantidad, precio, Math.round(cantidad * precio * 100) / 100d});
-                    calcularTotales();
-                    limpiar();
+        txtNombre.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if ((c < 'a' || c > 'z') && ((c < 'A' || c > 'Z'))) {
+                    evt.consume();
                 }
             }
-        }
+        });
+        txtCantidad.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (c < '0' || c > '9') {
+                    evt.consume();
+                }
+            }
+        });
+        txtPrecio.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if ((c < '0' || c > '9') && (c != '.')) {
+                    evt.consume();
+                }
+            }
+        });
+    }
 
-        private void onBotonEliminarClicked(ActionEvent evt) {
-            int index = tblPrincipal.getSelectedRow();
-            if (index > -1) {
-                tablaArticulos.removeRow(tblPrincipal.getSelectedRow());
+    private void onBotonAgregarClicked(ActionEvent evt) {
+        String nombre = getNombre();
+        Integer cantidad = getCantidad();
+        Double precio = getPrecio();
+
+        if (validarVariables(nombre, cantidad, precio)) {
+            if (validarArticulosRepetidos(nombre)) {
+                tablaArticulos.addRow(new Object[]{nombre, cantidad, precio, Math.round(cantidad * precio * 100) / 100d});
                 calcularTotales();
-            } else {
-                JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar");
+                limpiar();
             }
         }
+    }
 
-        private void onModeloArticulosAlterado(TableModelEvent evt) {
-            int rowIndex = evt.getFirstRow();
-            int colIndex = evt.getColumn();
+    private void onBotonEliminarClicked(ActionEvent evt) {
+        int index = tblPrincipal.getSelectedRow();
+        if (index > -1) {
+            tablaArticulos.removeRow(tblPrincipal.getSelectedRow());
+            calcularTotales();
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar");
+        }
+    }
 
-            switch (evt.getType()) {
-                case TableModelEvent.UPDATE:
+    private void onArticuloAlterado(TableModelEvent evt) {
+        int rowIndex = evt.getFirstRow();
+        int colIndex = evt.getColumn();
 
-                    if (colIndex == 0) {
-                        String nombre = (String) tblPrincipal.getValueAt(rowIndex, 0);
-                        for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
-                            if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
-                                if (i != rowIndex) {
-                                    JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
-                                    tablaArticulos.setValueAt("Nombre no valido", evt.getFirstRow(), 0);
-                                    break;
-                                }
+        switch (evt.getType()) {
+            case TableModelEvent.UPDATE:
+
+                if (colIndex == 0) {
+                    String nombre = (String) tblPrincipal.getValueAt(rowIndex, 0);
+                    for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+                        if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
+                            if (i != rowIndex) {
+                                JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
+                                tablaArticulos.setValueAt("Nombre no valido", evt.getFirstRow(), 0);
+                                break;
                             }
                         }
                     }
+                }
 
-                    if (colIndex == 1) {
-                        Integer cantidadIngresada = Integer.parseInt((String) tblPrincipal.getValueAt(rowIndex, 1));
-                        calcularTotalesAlModificar();
-                        if (cantidadIngresada <= 0) {
-                            JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
-                            tablaArticulos.setValueAt("1", tblPrincipal.getSelectedRow(), 1);
-                            break;
-                        }
+                if (colIndex == 1) {
+                    Integer cantidadIngresada = Integer.parseInt((String) tblPrincipal.getValueAt(rowIndex, 1));
+                    calcularTotalesAlModificar();
+                    if (cantidadIngresada <= 0) {
+                        JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
+                        tablaArticulos.setValueAt("1", tblPrincipal.getSelectedRow(), 1);
+                        break;
                     }
+                }
 
-                    if (colIndex == 2) {
-                        Double cantidadIngresada = Double.parseDouble((String) tblPrincipal.getValueAt(rowIndex, 2));
-                        calcularTotalesAlModificar();
-                        if (cantidadIngresada <= 0) {
-                            JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
-                            tablaArticulos.setValueAt("1.0", tblPrincipal.getSelectedRow(), 2);
-                            break;
-                        }
+                if (colIndex == 2) {
+                    Double cantidadIngresada = Double.parseDouble((String) tblPrincipal.getValueAt(rowIndex, 2));
+                    calcularTotalesAlModificar();
+                    if (cantidadIngresada <= 0) {
+                        JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+                        tablaArticulos.setValueAt("1.0", tblPrincipal.getSelectedRow(), 2);
+                        break;
                     }
-
-                //case TableModelEvent.INSERT: 
-                //case TableModelEvent.DELETE: 
-            }
-        }
-
-        private String getNombre() {
-            if (txtNombre.getText().isEmpty()) {
-                return "";
-            } else {
-                String nombre = txtNombre.getText();
-                return nombre;
-            }
-        }
-
-        private Integer getCantidad() {
-            if (txtCantidad.getText().isEmpty()) {
-                return 0;
-            } else {
-                Integer cantidad = Integer.parseInt(txtCantidad.getText());
-                return cantidad;
-            }
-        }
-
-        private Double getPrecio() {
-            if (txtPrecio.getText().isEmpty()) {
-                return 0.0;
-            } else {
-                Double precio = Double.parseDouble(txtPrecio.getText());
-                return precio;
-            }
-        }
-
-        private boolean validarVariables(String nombre, Integer cantidad, Double precio) {
-
-            if (nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Agregar nombre del articulo");
-                txtNombre.requestFocus();
-                return false;
-            }
-
-            if (txtCantidad.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Agregar la cantidad de articulos");
-                txtCantidad.requestFocus();
-                return false;
-            }
-
-            if (txtPrecio.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Agregar el precio del articulo");
-                txtPrecio.requestFocus();
-                return false;
-            }
-
-            if (cantidad <= 0) {
-                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
-                txtCantidad.requestFocus();
-                txtCantidad.setText("");
-                return false;
-            }
-
-            if (precio <= 0) {
-                JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
-                txtPrecio.requestFocus();
-                txtPrecio.setText("");
-                return false;
-            }
-
-            return true;
-        }
-
-        private boolean validarArticulosRepetidos(String nombre) {
-
-            for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
-                if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
-                    JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
-                    return false;
                 }
             }
-            return true;
+    }
+
+    private String getNombre() {
+        if (txtNombre.getText().isEmpty()) {
+            return "";
+        } else {
+            String nombre = txtNombre.getText();
+            return nombre;
         }
+    }
 
-        private void calcularTotales() {
-            Integer totalCantidad = 0;
-            Double totalNeto = 0.0;
-
-            for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
-
-                Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
-                Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
-
-                totalCantidad += cantidad;
-                totalNeto += Math.round(total * 100) / 100d;
-            }
-
-            lblTotalArticulos.setText(String.valueOf(totalCantidad));
-            lblTotalNeto.setText(String.valueOf(totalNeto));
+    private Integer getCantidad() {
+        if (txtCantidad.getText().isEmpty()) {
+            return 0;
+        } else {
+            Integer cantidad = Integer.parseInt(txtCantidad.getText());
+            return cantidad;
         }
+    }
 
-        private void calcularTotalesAlModificar() {
-            Integer totalCantidad = 0;
-            Double totalNeto = 0.0;
-
-            for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
-                Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
-                Double precio = Double.parseDouble(tblPrincipal.getValueAt(i, 2).toString());
-
-                Double totalProducto = cantidad * precio;
-                tablaArticulos.setValueAt(String.valueOf(totalProducto), i, 3);
-
-                Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
-
-                totalCantidad += cantidad;
-                totalNeto += Math.round(total * 100) / 100d;
-            }
-
-            lblTotalArticulos.setText(String.valueOf(totalCantidad));
-            lblTotalNeto.setText(String.valueOf(totalNeto));
+    private Double getPrecio() {
+        if (txtPrecio.getText().isEmpty()) {
+            return 0.0;
+        } else {
+            Double precio = Double.parseDouble(txtPrecio.getText());
+            return precio;
         }
+    }
 
-        private void limpiar() {
-            txtNombre.setText("");
-            txtCantidad.setText("");
-            txtPrecio.setText("");
+    private boolean validarVariables(String nombre, Integer cantidad, Double precio) {
+
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Agregar nombre del articulo");
             txtNombre.requestFocus();
+            return false;
         }
 
-        @SuppressWarnings("unchecked")
+        if (txtCantidad.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Agregar la cantidad de articulos");
+            txtCantidad.requestFocus();
+            return false;
+        }
+
+        if (txtPrecio.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Agregar el precio del articulo");
+            txtPrecio.requestFocus();
+            return false;
+        }
+
+        if (cantidad <= 0) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
+            txtCantidad.requestFocus();
+            txtCantidad.setText("");
+            return false;
+        }
+
+        if (precio <= 0) {
+            JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0");
+            txtPrecio.requestFocus();
+            txtPrecio.setText("");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validarArticulosRepetidos(String nombre) {
+
+        for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+            if (nombre.equalsIgnoreCase((String) tblPrincipal.getValueAt(i, 0))) {
+                JOptionPane.showMessageDialog(this, "El articulos ya esta registrado");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void calcularTotales() {
+        Integer totalCantidad = 0;
+        Double totalNeto = 0.0;
+
+        for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+
+            Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
+            Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
+
+            totalCantidad += cantidad;
+            totalNeto += Math.round(total * 100) / 100d;
+        }
+
+        lblTotalArticulos.setText(String.valueOf(totalCantidad));
+        lblTotalNeto.setText(String.valueOf(totalNeto));
+    }
+
+    private void calcularTotalesAlModificar() {
+        Integer totalCantidad = 0;
+        Double totalNeto = 0.0;
+
+        for (int i = 0; i < tblPrincipal.getRowCount(); i++) {
+            Integer cantidad = Integer.parseInt(tblPrincipal.getValueAt(i, 1).toString());
+            Double precio = Double.parseDouble(tblPrincipal.getValueAt(i, 2).toString());
+
+            Double totalProducto = cantidad * precio;
+            tablaArticulos.setValueAt(String.valueOf(totalProducto), i, 3);
+
+            Double total = Double.parseDouble(tblPrincipal.getValueAt(i, 3).toString());
+
+            totalCantidad += cantidad;
+            totalNeto += Math.round(total * 100) / 100d;
+        }
+
+        lblTotalArticulos.setText(String.valueOf(totalCantidad));
+        lblTotalNeto.setText(String.valueOf(totalNeto));
+    }
+
+    private void limpiar() {
+        txtNombre.setText("");
+        txtCantidad.setText("");
+        txtPrecio.setText("");
+        txtNombre.requestFocus();
+    }
+
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -418,19 +410,19 @@ public class Articulos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-            public static void main(String args[]) {
+    public static void main(String args[]) {
 
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    public void run() {
-                        try {
-                            new Articulos().setVisible(true);
-                        } catch (ParseException ex) {
-                            Logger.getLogger(Articulos.class
-                                    .getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                });
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new Articulos().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Articulos.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
             }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
