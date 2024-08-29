@@ -329,7 +329,7 @@ public class Articulos extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         jPanel4.add(jLabel1, gridBagConstraints);
 
-        jLabel2.setText("Cantida:");
+        jLabel2.setText("Cantidad:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -373,7 +373,7 @@ public class Articulos extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         jPanel4.add(btnAgregar, gridBagConstraints);
 
-        btnEliminar.setText("Elimimnar");
+        btnEliminar.setText("Eliminar");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 14;
         gridBagConstraints.gridy = 4;
